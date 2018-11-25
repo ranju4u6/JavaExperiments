@@ -1,6 +1,6 @@
 package test.java8.streams;
 
-public class Subject {
+public class Subject{
 
 	public Subject(String subjectName, double mark) {
 		super();
@@ -15,6 +15,10 @@ public class Subject {
 	}
 	public double getMark() {
 		return mark;
+	}
+	@Override
+	public String toString() {
+		return "Subject [subjectName=" + subjectName + ", mark=" + mark + "]";
 	}
 
 }
