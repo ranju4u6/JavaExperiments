@@ -1,8 +1,15 @@
 package test.thread.concurrency.reentrantlock;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * counter is incremented from 1-100 by two threads equally sharing the 
+ * opportunity to increment the variable
+ * @author Renju
+ *
+ */
 public class Counter {
 	
 	private int count;
@@ -22,21 +29,21 @@ public class Counter {
 			System.out.println("Thread ["+Thread.currentThread().getName()+"]"+"  Count:" + count);
 			return count++;
 		}finally{
-			if(Thread.currentThread().getName().equals(t1.getName())){
+			if(Thread.currentThread().getName().equals(t1.getName()) && lock.isHeldByCurrentThread()){
 				t1CompleteCondition.signal();
 				try {
 					System.out.println(Thread.currentThread().getName()+ " waiting...");
-					t2CompleteCondition.await();
+					t2CompleteCondition.await(2, TimeUnit.SECONDS);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
 			
-			if(Thread.currentThread().getName().equals(t2.getName())){
+			if(Thread.currentThread().getName().equals(t2.getName()) && lock.isHeldByCurrentThread()){
 				t2CompleteCondition.signal();
 				try {
 					System.out.println(Thread.currentThread().getName()+ " waiting...");
-					t1CompleteCondition.await();
+					t1CompleteCondition.await(2, TimeUnit.SECONDS);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
