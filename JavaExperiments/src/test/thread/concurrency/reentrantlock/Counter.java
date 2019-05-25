@@ -23,7 +23,8 @@ public class Counter {
 	
 	
 	public int getCount(){
-		lock.lock();
+		//lock.lock();
+		if(! lock.tryLock())return 0;
 		
 		try{
 			System.out.println("Thread ["+Thread.currentThread().getName()+"]"+"  Count:" + count);
@@ -66,7 +67,7 @@ public class Counter {
 		
 		counter.t1 = new Thread(() ->{
 			int localCount = 0;
-			while(localCount < 100){
+			while(localCount < 10){
 				
 				localCount = counter.getCount();	
 				
@@ -82,7 +83,7 @@ public class Counter {
 		
 		counter.t2 = new Thread(() ->{
 			int localCount = 0;
-			while(localCount < 100){
+			while(localCount < 10){
 				localCount = counter.getCount();
 					
 				try {
@@ -95,6 +96,11 @@ public class Counter {
 		});
 		
 		counter.t1.start();
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		counter.t2.start();
 
 	}
